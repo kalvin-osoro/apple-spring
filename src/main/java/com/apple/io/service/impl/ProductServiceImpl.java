@@ -259,7 +259,7 @@ public class ProductServiceImpl implements ProductService {
             productDtos.add(getProductDto(product));
         }
         return productDtos;
-     }
+    }
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -281,31 +281,31 @@ public class ProductServiceImpl implements ProductService {
         Product savedProduct = productRepository.save(product);
 
 
-            if (img.isEmpty()) {
-                throw new RuntimeException("Image file is empty");
-            }
+        if (img.isEmpty()) {
+            throw new RuntimeException("Image file is empty");
+        }
 
-            String imagePath = fileStorageService.saveFileWithSpecificFileNameV(
-                    "product_" + savedProduct.getId() + ".PNG", img, ImageUtils.getSubFolder());
+        String imagePath = fileStorageService.saveFileWithSpecificFileNameV(
+                "product_" + savedProduct.getId() + ".PNG", img, ImageUtils.getSubFolder());
 
-            //save
-            List<String> filePathList = new ArrayList<>();
-            filePathList.add(imagePath);
-            List<String> downloadUrlList = new ArrayList<>();
-            for (String filePath : filePathList) {
+        //save
+        List<String> filePathList = new ArrayList<>();
+        filePathList.add(imagePath);
+        List<String> downloadUrlList = new ArrayList<>();
+        for (String filePath : filePathList) {
 
-                String fileDownLoadUri = UriComponentsBuilder.fromUriString(serverName)
-                        .path("/product/view-product")
-                        .queryParam("fileName", filePath)
-                        .build()
-                        .encode()
-                        .toUriString();
-                log.info("The composed path for category:............ " + fileDownLoadUri);
+            String fileDownLoadUri = UriComponentsBuilder.fromUriString(serverName)
+                    .path("/product/view-product")
+                    .queryParam("fileName", filePath)
+                    .build()
+                    .encode()
+                    .toUriString();
+            log.info("The composed path for category:............ " + fileDownLoadUri);
 
-                //save to db
-                product.setImagePath(fileDownLoadUri);
-                productRepository.save(product);
-            }
+            //save to db
+            product.setImagePath(fileDownLoadUri);
+            productRepository.save(product);
+        }
         return ResponseEntity.ok().body(true);
     }
 
